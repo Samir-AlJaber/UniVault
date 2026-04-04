@@ -49,7 +49,6 @@ export default function Home() {
           </div>
 
           <div className="card">
-            
             <h3>Upload Notes</h3>
             <p>
               Students can contribute notes, PDFs and study materials.
@@ -57,24 +56,17 @@ export default function Home() {
           </div>
 
           <div className="card">
-
             <h3>Download Anytime</h3>
             <p>
               Access academic resources instantly whenever needed.
             </p>
-
           </div>
-
         </div>
-
       </section>
 
       <footer className="footer">
         <p>© 2026 UniVault. All rights reserved.</p>
-
       </footer>
-
     </div>
-
   );
 }

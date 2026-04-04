@@ -1,108 +1,103 @@
-import { useEffect, useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
-import ApiClient from '../api';
-import toast from 'react-hot-toast';
-import { calculateAttendanceMarks, totalMarksPerDay } from '../helpers/util';
+import { useEffect, useState } from "react";
+import ApiClient from "../api";
 
-const convertToHm = (seconds: number | undefined) => {
-  if (!seconds) return '0';
-  const hours = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-  return `${hours}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-};
-
-interface SessionInfo {
-  timeRemaining: number; // in seconds
-  name: string;
-  duration?: string;
-  created_at?: string;
-}
-
-const apiClient = new ApiClient();
+const api = new ApiClient();
 
 export default function Home() {
-  const [rollValue, setRollValue] = useState('');
-  const [sessionInfo, setSessionInfo] = useState<SessionInfo | null>(null);
+  const [semesters, setSemesters] = useState<string[]>([]);
+  const [courses, setCourses] = useState<string[]>([]);
+  const [resources, setResources] = useState<any[]>([]);
+  const [selectedSemester, setSelectedSemester] = useState<string | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
 
   useEffect(() => {
-    // api call to get sessionInfo
-    // 1 session will be running at a time
-    const getSession = async () => {
-      const session = await apiClient.getSession();
-      console.log(session);
-
-      if (session.success) {
-        setSessionInfo({
-          ...session,
-          timeRemaining: session.timeRemaining * 60,
-          name: session.name,
-        });
+    async function loadSemesters() {
+      const data = await api.getSemesters();
+      if (data && data.semesters) {
+        setSemesters(data.semesters);
       }
-    };
-
-    getSession();
-  }, []);
-
-  // Decrement timeRemaining every second
-  useEffect(() => {
-    if (sessionInfo && sessionInfo.timeRemaining <= 0) return;
-
-    const timer = setInterval(() => {
-      setSessionInfo((p) => {
-        if (!p) return null;
-        return {
-          ...p,
-          timeRemaining: p.timeRemaining - 1,
-        };
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [sessionInfo?.timeRemaining]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const res = await apiClient.submitAttendance(parseInt(rollValue));
-    console.log('res', res);
-
-    console.log('sessionInfo', sessionInfo);
-
-    if (res.success && sessionInfo) {
-      const attendanceMarks = calculateAttendanceMarks(res.attendance.created_at, sessionInfo.duration!, sessionInfo.created_at!);
-      toast.success(`Obtained marks: ${attendanceMarks} out of ${totalMarksPerDay}`, {
-        duration: 5000,
-      });
-    } else {
-      toast.error(res.message);
     }
 
-    setRollValue('');
-  };
+    loadSemesters();
+  }, []);
+
+  async function handleSemesterClick(semester: string) {
+    setSelectedSemester(semester);
+    setSelectedCourse(null);
+    setResources([]);
+
+    const data = await api.getCourses(semester);
+    if (data && data.courses) {
+      setCourses(data.courses);
+    }
+  }
+
+  async function handleCourseClick(course: string) {
+    setSelectedCourse(course);
+
+    const data = await api.getResources(course);
+    if (data && data.resources) {
+      setResources(data.resources);
+    }
+  }
 
   return (
-    <div className="pt-4 d-flex justify-content-around items-center">
-      {!sessionInfo && <p className="text-3xl font-light fs-4">No active session found</p>}
-      {sessionInfo && (
-        <div className="w-lg-400">
-          <div className="text-center">
-            <h2 className="text-sm font-medium text-muted-foreground mb-2">Session</h2>
-            <p className="text-3xl font-light fs-4">{sessionInfo?.name}</p>
-          </div>
-          <div className="text-center">
-            <h2 className="text-sm font-medium text-muted-foreground mb-2">Remaining</h2>
-            <p className="text-3xl font-light fs-4">{convertToHm(sessionInfo?.timeRemaining)}</p>
-          </div>
-          <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-            <Form.Control type="number" placeholder="Enter roll" value={rollValue} onChange={(e) => setRollValue(e.target.value)} className="w-full text-center border-2" />
-            <div className="d-grid gap-2 mt-3">
-              <Button variant="primary" onClick={handleSubmit}>
-                Submit
-              </Button>
-            </div>
-          </Form.Group>
-        </div>
+    <div style={{ padding: "40px", fontFamily: "Arial" }}>
+      <h1>UniVault</h1>
+
+      <h2>Select Semester</h2>
+
+      <ul>
+        {semesters.map((semester) => (
+          <li
+            key={semester}
+            style={{ cursor: "pointer", margin: "10px 0", color: "blue" }}
+            onClick={() => handleSemesterClick(semester)}
+          >
+            Semester {semester}
+          </li>
+        ))}
+      </ul>
+
+      {selectedSemester && (
+        <>
+          <h2>Courses for Semester {selectedSemester}</h2>
+
+          <ul>
+            {courses.map((course) => (
+              <li
+                key={course}
+                style={{ cursor: "pointer", margin: "8px 0", color: "green" }}
+                onClick={() => handleCourseClick(course)}
+              >
+                {course}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      {selectedCourse && (
+        <>
+          <h2>Resources for {selectedCourse}</h2>
+
+          <ul>
+            {resources.map((resource, index) => (
+              <li key={index} style={{ marginBottom: "10px" }}>
+                {resource.title} ({resource.type})
+
+                <br />
+
+                <a
+                  href={`http://127.0.0.1:8000/storage/${resource.file_path}`}
+                  target="_blank"
+                >
+                  Download
+                </a>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );
