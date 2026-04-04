@@ -1,0 +1,67 @@
+body {
+  background: linear-gradient(to right, #eef2ff, #f8fafc);
+}
+
+.download-container {
+  width: 650px;
+  margin: 70px auto;
+  text-align: center;
+}
+
+.download-container h2 {
+  font-size: 28px;
+  margin-bottom: 25px;
+  color: #1e293b;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #cbd5f5;
+}
+
+.resources-list {
+  margin-top: 25px;
+}
+
+.resource-item {
+  background: white;
+  padding: 16px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  transition: 0.3s;
+}
+
+.resource-item:hover {
+  transform: translateY(-2px);
+}
+
+.resource-item button {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.resource-item button:hover {
+  background: #2563eb;
+}
+
+.resource-item button:last-child {
+  background: #ef4444;
+}
+
+.resource-item button:last-child:hover {
+  background: #dc2626;
+}
