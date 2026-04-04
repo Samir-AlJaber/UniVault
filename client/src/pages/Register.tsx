@@ -1,31 +1,56 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
+import MessageOverlay from "../components/MessageOverlay";
 import "../styles/register.css";
+import "../styles/overlay.css";
 import axios from "axios";
 
 export default function Register() {
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("");
 
+  const [overlayOpen, setOverlayOpen] = useState(false);
+  const [overlayTitle, setOverlayTitle] = useState("");
+  const [overlayMessage, setOverlayMessage] = useState("");
+  const [redirectAfterClose, setRedirectAfterClose] = useState(false);
+
+  const showOverlay = (
+    title: string,
+    message: string,
+    shouldRedirect: boolean = false
+  ) => {
+    setOverlayTitle(title);
+    setOverlayMessage(message);
+    setRedirectAfterClose(shouldRedirect);
+    setOverlayOpen(true);
+  };
+
+  const handleOverlayClose = () => {
+    setOverlayOpen(false);
+
+    if (redirectAfterClose) {
+      window.location.href = "/login";
+    }
+  };
+
   const handleRegister = async (e: any) => {
-    e.preventDefault(); // 🔥 IMPORTANT
+    e.preventDefault();
 
     if (!role) {
-      alert("Please select Upload or Download option");
+      showOverlay("Selection Required", "Please select Upload or Download option.");
       return;
     }
 
     if (!name || !email || !password || !confirmPassword) {
-      alert("All fields required");
+      showOverlay("Missing Information", "All fields are required.");
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      showOverlay("Password Error", "Passwords do not match.");
       return;
     }
 
@@ -40,39 +65,30 @@ export default function Register() {
         }
       );
 
-      console.log(response.data);
-
       if (response.data.success) {
-        alert("Registration successful ✅");
-
-        
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-
-        window.location.href = "/login";
+        localStorage.removeItem("user");
+        showOverlay("Registration Successful", "Your account has been created successfully. Please login.", true);
       } else {
-        alert("Registration failed ❌");
+        showOverlay("Registration Failed", "Please try again.");
       }
-
     } catch (error: any) {
       console.error(error);
-      alert(error?.response?.data?.message || "Error occurred");
+      showOverlay(
+        "Registration Failed",
+        error?.response?.data?.message || "An error occurred during registration."
+      );
     }
   };
 
   return (
     <div>
-
       <Navbar />
 
       <div className="register-container">
-
         <div className="register-card">
-
           <h2>Create UniVault Account</h2>
 
-       
           <div style={{ marginBottom: "15px" }}>
-
             <button
               type="button"
               onClick={() => setRole("uploader")}
@@ -99,12 +115,9 @@ export default function Register() {
             >
               Download Resource
             </button>
-
           </div>
 
-         
           <form onSubmit={handleRegister}>
-
             <input
               type="text"
               placeholder="Full Name"
@@ -136,13 +149,16 @@ export default function Register() {
             <button type="submit" className="register-btn">
               Register
             </button>
-
           </form>
-
         </div>
-
       </div>
 
+      <MessageOverlay
+        isOpen={overlayOpen}
+        title={overlayTitle}
+        message={overlayMessage}
+        onClose={handleOverlayClose}
+      />
     </div>
   );
 }
