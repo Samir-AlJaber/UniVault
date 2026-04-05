@@ -1,0 +1,28 @@
+.resources-container {
+  text-align: center;
+  margin-top: 80px;
+}
+
+.resources-container h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.resources-container p {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.resource-buttons button {
+  margin: 10px;
+  padding: 12px 20px;
+  background-color: #2f5bd3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.resource-buttons button:hover {
+  background-color: #2447a5;
+}

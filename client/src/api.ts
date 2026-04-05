@@ -14,7 +14,37 @@ class ApiClient {
     });
   }
 
-  // currently, only fetches 1 session greater than current time
+ 
+
+  async getSemesters() {
+    try {
+      const response = await this.client.get('/api/semesters');
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async getCourses(semester: string) {
+    try {
+      const response = await this.client.get(`/api/courses/${semester}`);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+  async getResources(course: string) {
+    try {
+      const response = await this.client.get(`/api/resources/${encodeURIComponent(course)}`);
+      return response.data;
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
+
+
   async getSession() {
     try {
       const response = await this.client.get('/api/session');
@@ -30,6 +60,7 @@ class ApiClient {
         toast.error('Credentials are required');
         return;
       }
+
       const response = await this.client.post('/api/session', { name, duration, username, password });
       return response.data;
     } catch (error) {
@@ -66,6 +97,7 @@ class ApiClient {
         toast.error('Credentials are required');
         return;
       }
+
       const response = await this.client.post('/api/sessions', { username, password });
       return response.data;
     } catch (error) {
@@ -73,16 +105,14 @@ class ApiClient {
     }
   }
 
-  // Handle common errors
+
+
   handleError(error: any) {
     if (error.response) {
-      // Server responded with a status other than 2xx
       console.error(`API Error: ${error.response.status} - ${error.response.data.message}`);
     } else if (error.request) {
-      // Request was made, but no response was received
       console.error('API Error: No response received', error.request);
     } else {
-      // Something went wrong while setting up the request
       console.error('API Error:', error.message);
     }
 
