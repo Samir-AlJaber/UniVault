@@ -13,8 +13,9 @@ class CreateUsersTable extends Migration
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('password')->nullable();
-            $table->integer('points')->default(0); 
+            $table->integer('points')->default(0);
             $table->timestamps();
+            $table->string('role')->default('viewer');
         });
     }
 
