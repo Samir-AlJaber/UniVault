@@ -1,59 +1,120 @@
-body {
-  background: linear-gradient(to right, #eef2ff, #f8fafc);
-}
-
-.upload-container {
+.products-container {
+  min-height: 100vh;
+  padding: 4rem 1rem;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  margin-top: 80px;
+  position: relative;
+  overflow: hidden;
+
+  background: linear-gradient(135deg,
+      rgba(37, 99, 235, 0.95),
+      rgba(4, 31, 43, 0.92),
+      rgba(99, 102, 241, 0.9));
+
+  background-size: 300% 300%;
+  animation: gradientShift 8s ease infinite;
 }
 
-.upload-card {
-  background: white;
-  padding: 35px;
+.products-container::before {
+  content: "";
+  position: absolute;
   width: 420px;
-  border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  height: 420px;
+  top: -120px;
+  left: -120px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  filter: blur(60px);
+  animation: floatBlob 12s ease-in-out infinite;
 }
 
-.upload-card h2 {
-  margin-bottom: 25px;
-  font-size: 26px;
-  color: #1e293b;
+.products-container::after {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  bottom: -140px;
+  right: -140px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  filter: blur(70px);
+  animation: floatBlob 16s ease-in-out infinite;
 }
 
-.upload-card input,
-.upload-card select {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  border: 1px solid #cbd5f5;
-  outline: none;
-  transition: 0.3s;
-}
-
-.upload-card input:focus,
-.upload-card select:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 5px rgba(99, 102, 241, 0.4);
-}
-
-.upload-card button {
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
+.products-container h2 {
   color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: 0.3s;
+  margin-bottom: 2rem;
+  font-size: 2.4rem;
+  font-weight: 800;
 }
 
-.upload-card button:hover {
+.controls-wrapper {
+  width: 100%;
+  max-width: 800px;
+}
+
+.filter-section {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(18px);
+  padding: 25px;
+  border-radius: 16px;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+.filter-grid input,
+.filter-grid select {
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+}
+
+.dropdown {
+  position: absolute;
+  background: white;
+  width: 100%;
+  border-radius: 10px;
+  z-index: 10;
+}
+
+.dropdown div {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.dropdown div:hover {
+  background: #eee;
+}
+
+.submit-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(120deg,#16a34a,#22c55e);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
   transform: translateY(-2px);
-  background: linear-gradient(135deg, #4f46e5, #4338ca);
+}
+
+@keyframes gradientShift {
+  0% { background-position:0% 50%; }
+  50% { background-position:100% 50%; }
+  100% { background-position:0% 50%; }
+}
+
+@keyframes floatBlob {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(40px); }
 }
