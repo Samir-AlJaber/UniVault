@@ -15,19 +15,15 @@ class AuthController extends Controller
             $request->validate([
                 'name' => 'required|string',
                 'email' => 'required|email|unique:users',
-                'password' => 'required|min:6',
-                'role' => 'required|string'
+                'password' => 'required|min:6'
             ]);
-
-            
-            $role = $request->role === "uploader" ? "uploader" : "viewer";
 
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'points' => 0,
-                'role' => $role
+                'points' => 0
+                
             ]);
 
             return response()->json([
