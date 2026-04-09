@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
-import MessageOverlay from "../components/MessageOverlay";
 import "../styles/profile.css";
 import "../styles/overlay.css";
 
