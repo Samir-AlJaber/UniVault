@@ -32,7 +32,8 @@ export default function Navbar() {
           Download
         </Link>
 
-        {user && user.role !== "viewer" && (
+        {/* ✅ Upload available for all logged-in users */}
+        {user && (
           <Link to="/upload" style={{ marginRight: "15px", color: "white" }}>
             Upload
           </Link>
