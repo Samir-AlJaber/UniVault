@@ -12,9 +12,14 @@ class CreateResourcesTable extends Migration
             $table->id();
             $table->string('course');
             $table->string('title');
+            $table->string('semester');
             $table->string('type');
             $table->string('file_path');
             $table->timestamps();
+            $table->unsignedBigInteger('user_id')->nullable();
+
+            $table->integer('rating_sum')->default(0);
+            $table->integer('rating_count')->default(0);
         });
     }
 
