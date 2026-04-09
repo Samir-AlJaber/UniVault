@@ -1,80 +1,116 @@
+import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import "../styles/home.css";
-import { useNavigate } from "react-router-dom";
 
 export default function Home() {
-  const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user") || "null");
 
   return (
     <div>
+
       <Navbar />
 
-      <section className="hero">
-        <h1>Welcome to UniVault</h1>
+      <section
+        className="hero"
+        style={{
+          backgroundImage: "url('/education-bg.jpg')"
+        }}
+      >
+        <div className="hero-content">
 
-        <p>
-          A collaborative platform where students can upload, share and
-          download academic resources semester-wise.
-        </p>
+          <h1>Welcome to UniVault</h1>
 
-        <div className="hero-buttons">
-          <button onClick={() => navigate("/resources")}>
-            Browse Resources
-          </button>
+          <p>
+            A collaborative platform where students can upload, share and download academic resources semester-wise.
+          </p>
 
-          {!user && (
-            <>
-              <button onClick={() => navigate("/login")}>
-                Login
-              </button>
+          <div className="hero-buttons">
+            <Link to="/resources">
+              <button>Browse Resources</button>
+            </Link>
 
-              <button onClick={() => navigate("/register")}>
-                Register
-              </button>
-            </>
-          )}
+            {!user && (
+              <>
+                <Link to="/login">
+                  <button>Login</button>
+                </Link>
+
+                <Link to="/register">
+                  <button>Register</button>
+                </Link>
+              </>
+            )}
+          </div>
+
         </div>
       </section>
 
+      {/* FEATURES */}
       <section className="features">
+
         <h2>Why Choose UniVault?</h2>
 
         <div className="feature-cards">
+
           <div className="card">
             <h3>Semester Wise Resources</h3>
-            <p>
-              Easily find resources organized by semester and courses.
-            </p>
+            <p>Easily find resources organized by semester and courses.</p>
           </div>
 
           <div className="card">
-            
             <h3>Upload Notes</h3>
-            <p>
-              Students can contribute notes, PDFs and study materials.
-            </p>
+            <p>Share your notes and help others learn better.</p>
           </div>
 
           <div className="card">
-
             <h3>Download Anytime</h3>
-            <p>
-              Access academic resources instantly whenever needed.
-            </p>
-
+            <p>Access academic resources anytime from anywhere.</p>
           </div>
 
         </div>
 
       </section>
 
-      <footer className="footer">
-        <p>© 2026 UniVault. All rights reserved.</p>
+      {/* STATS */}
+      <section className="stats-section">
 
-      </footer>
+        <div className="stat">
+          <h3>100+</h3>
+          <p>Resources</p>
+        </div>
+
+        <div className="stat">
+          <h3>50+</h3>
+          <p>Courses</p>
+        </div>
+
+        <div className="stat">
+          <h3>1000+</h3>
+          <p>Students</p>
+        </div>
+
+        <div className="stat">
+          <h3>24/7</h3>
+          <p>Access</p>
+        </div>
+
+      </section>
+
+      {/* CTA */}
+      <section className="cta-section">
+
+        <h2>Start Sharing Knowledge Today</h2>
+
+        <p>Join UniVault and help students succeed together.</p>
+
+        <div className="cta-buttons">
+          <Link to="/upload">
+            <button>Upload Resource</button>
+          </Link>
+        </div>
+
+      </section>
 
     </div>
-
   );
 }
