@@ -113,7 +113,6 @@ export default function DownloadResources() {
 
         <div className="controls-wrapper">
           <div className="search-section">
-            <h3>Search</h3>
             <input
               type="text"
               placeholder="Search resource..."
@@ -205,23 +204,32 @@ export default function DownloadResources() {
       {overlayOpen && (
         <div className="overlay-backdrop">
           <div className="overlay-box">
-            <p>{overlayMessage}</p>
+            <h2 className="overlay-title">
+              {selectedResource ? "Rate" : "Notice"}
+            </h2>
+
+            <p className="overlay-text">{overlayMessage}</p>
 
             {selectedResource && (
               <>
                 <input
+                  className="overlay-input"
                   type="number"
                   min="1"
                   max="10"
                   value={ratingInput}
                   onChange={(e) => setRatingInput(e.target.value)}
                 />
-                <button onClick={submitRating}>Submit</button>
+                <button className="overlay-btn" onClick={submitRating}>
+                  Submit
+                </button>
               </>
             )}
 
             {!selectedResource && (
-              <button onClick={() => setOverlayOpen(false)}>OK</button>
+              <button className="overlay-btn" onClick={() => setOverlayOpen(false)}>
+                OK
+              </button>
             )}
           </div>
         </div>
