@@ -3,7 +3,9 @@ type MessageOverlayProps = {
   title: string;
   message: string;
   buttonText?: string;
+  cancelText?: string;
   onClose: () => void;
+  onCancel?: () => void;
 };
 
 export default function MessageOverlay({
@@ -11,7 +13,9 @@ export default function MessageOverlay({
   title,
   message,
   buttonText = "OK",
+  cancelText = "Cancel",
   onClose,
+  onCancel,
 }: MessageOverlayProps) {
   if (!isOpen) return null;
 
@@ -20,9 +24,16 @@ export default function MessageOverlay({
       <div className="overlay-box">
         <h3>{title}</h3>
         <p>{message}</p>
-        <button className="overlay-btn" onClick={onClose}>
-          {buttonText}
-        </button>
+        <div className="overlay-buttons">
+          <button className="overlay-btn" onClick={onClose}>
+            {buttonText}
+          </button>
+          {onCancel && (
+            <button className="overlay-btn-cancel" onClick={onCancel}>
+              {cancelText}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
