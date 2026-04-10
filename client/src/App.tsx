@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -12,27 +13,31 @@ function App() {
 
   return (
 
-    <BrowserRouter>
+    <GoogleOAuthProvider clientId="529740625989-tnqtt45ts42l6j0j8qnk2dsclnbf6mdv.apps.googleusercontent.com">
 
-      <Routes>
+      <BrowserRouter>
 
-        <Route path="/" element={<Home />} />
+        <Routes>
 
-        <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Home />} />
 
-        <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
 
-        <Route path="/resources" element={<Resources />} />
+          <Route path="/register" element={<Register />} />
 
-        <Route path="/upload" element={<UploadResources />} />
+          <Route path="/resources" element={<Resources />} />
 
-        <Route path="/download" element={<DownloadResources />} />
+          <Route path="/upload" element={<UploadResources />} />
 
-        <Route path="/profile" element={<Profile />} />
+          <Route path="/download" element={<DownloadResources />} />
 
-      </Routes>
+          <Route path="/profile" element={<Profile />} />
 
-    </BrowserRouter>
+        </Routes>
+
+      </BrowserRouter>
+
+    </GoogleOAuthProvider>
 
   );
 }
