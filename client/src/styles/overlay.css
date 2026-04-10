@@ -34,6 +34,12 @@
   line-height: 1.5;
 }
 
+.overlay-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
 .overlay-btn {
   background: #2f5bd3;
   color: white;
@@ -42,8 +48,24 @@
   border-radius: 8px;
   cursor: pointer;
   font-size: 15px;
+  flex: 1;
 }
 
 .overlay-btn:hover {
   background: #2447a5;
+}
+
+.overlay-btn-cancel {
+  background: #e5e7eb;
+  color: #333;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  flex: 1;
+}
+
+.overlay-btn-cancel:hover {
+  background: #d1d5db;
 }
