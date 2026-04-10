@@ -50,7 +50,7 @@
   animation: fadeUp .6s ease;
 }
 
-/* PROFILE CARD */
+
 .profile-card {
   background: rgba(255,255,255,0.92);
   padding: 1.5rem 2rem;
@@ -60,7 +60,7 @@
   text-align: center;
 }
 
-/* LIST */
+
 .category-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -69,7 +69,7 @@
   max-width: 700px;
 }
 
-/* ITEM */
+
 .category-item {
   background: rgba(255,255,255,0.92);
   border-radius: 16px;
@@ -93,7 +93,7 @@
   flex: 1;
 }
 
-/* DELETE BUTTON */
+
 .category-item button {
   padding: 6px 14px;
   border: none;
@@ -112,7 +112,7 @@
   animation: deleteFlow 2s linear infinite;
 }
 
-/* MESSAGE */
+
 .success-msg {
   padding: 1rem;
   border-radius: 12px;
@@ -123,7 +123,7 @@
   text-align: center;
 }
 
-/* ANIMATIONS */
+
 @keyframes bgPulse {
   0% { transform: scale(1); }
   50% { transform: scale(2); }
