@@ -9,12 +9,9 @@ export default function Profile() {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const [resources, setResources] = useState<any[]>([]);
-
-  const [overlayOpen, setOverlayOpen] = useState(false);
-  const [overlayTitle, setOverlayTitle] = useState("");
-  const [overlayMessage, setOverlayMessage] = useState("");
-  const [deleteId, setDeleteId] = useState<number | null>(null);
-  const [isConfirm, setIsConfirm] = useState(false);
+  const [message, setMessage] = useState("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [resourceToDelete, setResourceToDelete] = useState<number | null>(null);
 
   useEffect(() => {
     fetchUserResources();
@@ -31,18 +28,8 @@ export default function Profile() {
     }
   }
 
-  function openDeleteConfirm(id: number) {
-    setDeleteId(id);
-    setOverlayTitle("Confirm Delete");
-    setOverlayMessage("Are you sure you want to delete this resource?");
-    setIsConfirm(true);
-    setOverlayOpen(true);
-  }
-
-  async function confirmDelete() {
-    if (!deleteId) return;
-
-    const res = await fetch(`http://127.0.0.1:8000/api/delete/${deleteId}`, {
+  async function deleteResource(id: number) {
+    const res = await fetch(`http://127.0.0.1:8000/api/delete/${id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_id: user.id })
@@ -50,15 +37,11 @@ export default function Profile() {
 
     const data = await res.json();
 
-    setOverlayOpen(false);
-
     if (data.success) {
+      setMessage("Deleted successfully");
       fetchUserResources();
     } else {
-      setOverlayTitle("Error");
-      setOverlayMessage(data.message);
-      setIsConfirm(false);
-      setOverlayOpen(true);
+      setMessage(data.message);
     }
   }
 
@@ -76,73 +59,54 @@ export default function Profile() {
           <p><strong>Email:</strong> {user.email}</p>
         </div>
 
-        <div className="profile-uploads">
+        {message && (
+          <div className="success-msg">
+            {message}
+          </div>
+        )}
 
-          <h3>My Uploaded Resources ({resources.length})</h3>
+        <div className="profile-list">
 
           {resources.length === 0 ? (
-            <p>No resources uploaded yet.</p>
-          ) : (
-            <div>
-
-              {resources.map((res) => (
-
-                <div key={res.id} className="resource-item">
-
-                  <span>{res.title}</span>
-
-                  <div>
-
-                    <a
-                      href={`http://127.0.0.1:8000/storage/${res.file_path}`}
-                      target="_blank"
-                    >
-                      <button>View</button>
-                    </a>
-
-                    <button
-                      style={{ marginLeft: "10px", backgroundColor: "red", color: "white" }}
-                      onClick={() => openDeleteConfirm(res.id)}
-                    >
-                      Delete
-                    </button>
-
-                  </div>
-
-                </div>
-
-              ))}
-
+            <div className="profile-item">
+              <span>No resources uploaded yet</span>
             </div>
+          ) : (
+            resources.map((res) => (
+              <div key={res.id} className="profile-item">
+
+                <span>{res.title}</span>
+
+                <button onClick={() => { setResourceToDelete(res.id); setShowDeleteConfirm(true); }}>
+                  Delete
+                </button>
+
+              </div>
+            ))
           )}
 
         </div>
 
       </div>
 
-      {overlayOpen && (
-        <div className="overlay-backdrop">
-          <div className="overlay-box">
-            <h3>{overlayTitle}</h3>
-            <p>{overlayMessage}</p>
-
-            {isConfirm ? (
-              <div>
-                <button onClick={confirmDelete}>Confirm</button>
-                <button
-                  style={{ marginLeft: "10px", backgroundColor: "gray" }}
-                  onClick={() => setOverlayOpen(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            ) : (
-              <button onClick={() => setOverlayOpen(false)}>OK</button>
-            )}
-
-          </div>
-        </div>
-      )}
+      <MessageOverlay
+        isOpen={showDeleteConfirm}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this resource?"
+        buttonText="Delete"
+        cancelText="Cancel"
+        onClose={() => {
+          if (resourceToDelete) {
+            deleteResource(resourceToDelete);
+          }
+          setShowDeleteConfirm(false);
+          setResourceToDelete(null);
+        }}
+        onCancel={() => {
+          setShowDeleteConfirm(false);
+          setResourceToDelete(null);
+        }}
+      />
 
     </div>
   );

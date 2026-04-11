@@ -1,44 +1,132 @@
 .register-container {
+  min-height: 100vh;
+  padding: 4rem 1rem;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 85vh;
-  background-color: #f8fafc;
+  position: relative;
+  overflow: hidden;
 }
 
-.register-card {
-  background: white;
-  padding: 2.5rem;
-  width: 380px;
-  border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-  text-align: center;
+.register-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle,
+    rgba(139,92,246,0.9),
+    rgba(79,70,229,0.85),
+    rgba(30,27,75,0.95));
+  animation: bgPulse 5s ease infinite;
 }
 
-.register-card h2 {
-  margin-bottom: 1.5rem;
+.register-container::after {
+  content: "";
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  bottom: -120px;
+  right: -120px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  filter: blur(70px);
 }
 
-.register-card input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  font-size: 14px;
-}
-
-.register-btn {
-  width: 100%;
-  padding: 12px;
-  border: none;
-  background: #2563eb;
+.register-container h2 {
   color: white;
-  border-radius: 6px;
+  font-size: 2.3rem;
+  margin-bottom: 1.5rem;
+  z-index: 2;
+}
+
+.register-form {
+  z-index: 2;
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(18px);
+  padding: 25px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.register-form input {
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+}
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-container input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+button.toggle-password {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  transition: color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  min-width: 0;
+  min-height: 0;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+}
+
+button.toggle-password svg {
+  display: block;
+}
+
+button.toggle-password:hover {
+  color: #000;
+}
+
+button.toggle-password:focus,
+button.toggle-password:active {
+  outline: none;
+  box-shadow: none;
+}
+.register-form button:not(.toggle-password) {
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(120deg,#a855f7,#ec4899);
+  color: white;
   font-weight: bold;
   cursor: pointer;
 }
 
-.register-btn:hover {
-  background: #1d4ed8;
+.error-msg {
+  z-index: 2;
+  background: rgba(239,68,68,0.9);
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+@keyframes bgPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.5); }
+  100% { transform: scale(1); }
 }

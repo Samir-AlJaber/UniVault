@@ -1,80 +1,71 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import MessageOverlay from "./MessageOverlay";
+import "../styles/navbar.css";
 
 export default function Navbar() {
-  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    setIsLoggedIn(!!user);
+  }, []);
+
+  const handleLogoutClick = () => {
+    setShowLogoutConfirm(true);
+  };
+
+  const handleLogoutConfirm = () => {
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    setShowLogoutConfirm(false);
+    window.location.href = "/";
+  };
+
+  const handleLogoutCancel = () => {
+    setShowLogoutConfirm(false);
+  };
 
   return (
-    <nav
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        padding: "10px 20px",
-        background: "#222",
-        color: "white"
-      }}
-    >
-      <div>
-        <Link to="/" style={{ color: "white", textDecoration: "none" }}>
-          UniVault
-        </Link>
+    <div className="navbar">
+
+      <div className="navbar-container">
+
+        <h1 className="logo">UniVault</h1>
+
+        <div className="nav-links">
+          <Link to="/">Home</Link>
+          <Link to="/resources">Resources</Link>
+          <Link to="/upload">Upload</Link>
+          <Link to="/download">Download</Link>
+          {isLoggedIn ? (
+            <>
+              <Link to="/profile">Profile</Link>
+              <button onClick={handleLogoutClick} className="logout-btn">
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">Login</Link>
+              <Link to="/register">Register</Link>
+            </>
+          )}
+        </div>
+
       </div>
 
-      <div>
-        <Link to="/" style={{ marginRight: "15px", color: "white" }}>
-          Home
-        </Link>
+      <MessageOverlay
+        isOpen={showLogoutConfirm}
+        title="Confirm Logout"
+        message="Are you sure you want to logout?"
+        buttonText="Yes, Logout"
+        cancelText="Cancel"
+        onClose={handleLogoutConfirm}
+        onCancel={handleLogoutCancel}
+      />
 
-        <Link to="/resources" style={{ marginRight: "15px", color: "white" }}>
-          Resources
-        </Link>
-
-        <Link to="/download" style={{ marginRight: "15px", color: "white" }}>
-          Download
-        </Link>
-
-        {user && user.role !== "viewer" && (
-          <Link to="/upload" style={{ marginRight: "15px", color: "white" }}>
-            Upload
-          </Link>
-        )}
-
-        {user && (
-          <Link to="/profile" style={{ marginRight: "15px", color: "white" }}>
-            Profile
-          </Link>
-        )}
-
-        {!user && (
-          <>
-            <Link to="/login" style={{ marginRight: "15px", color: "white" }}>
-              Login
-            </Link>
-
-            <Link to="/register" style={{ color: "white" }}>
-              Register
-            </Link>
-          </>
-        )}
-
-        {user && (
-          <button
-            onClick={() => {
-              localStorage.removeItem("user");
-              window.location.href = "/";
-            }}
-            style={{
-              background: "red",
-              color: "white",
-              border: "none",
-              padding: "5px 10px",
-              cursor: "pointer",
-              marginLeft: "15px"
-            }}
-          >
-            Logout
-          </button>
-        )}
-      </div>
-    </nav>
+    </div>
   );
 }

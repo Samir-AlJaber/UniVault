@@ -1,76 +1,180 @@
-.hero {
-  text-align: center;
-  padding: 6rem 2rem;
-  background: linear-gradient(135deg, #2563eb, #38bdf8);
-  color: white;
+.section{
+  margin:0;
 }
 
-.hero h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:#0f172a;
 }
 
-.hero p {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
+.hero{
+  position:relative;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background-size:cover !important;
+  background-position:center !important;
+  background-repeat:no-repeat !important;
+  color:white;
+  overflow:hidden;
 }
 
-.hero-buttons button {
-  padding: 0.8rem 1.8rem;
-  margin: 0.5rem;
-  border: none;
-  border-radius: 50px;
-  font-size: 1rem;
-  cursor: pointer;
-  background-color: white;
-  color: #2563eb;
-  font-weight: 600;
-  transition: all 0.3s ease;
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    135deg,
+    rgba(2,6,23,0.88),
+    rgba(30,64,175,0.75),
+    rgba(14,165,233,0.65)
+  );
+  z-index:1;
 }
 
-.hero-buttons button:hover {
-  background-color: #0f172a;
-  color: white;
-  transform: translateY(-3px);
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index:1;
 }
 
-.features {
-  padding: 4rem 2rem;
-  text-align: center;
-  background-color: #f8fafc;
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:900px;
+  animation:fadeUp 1s ease;
 }
 
-.features h2 {
-  font-size: 2rem;
-  margin-bottom: 2rem;
-  color: #0f172a;
+.hero h1{
+  font-size:3.8rem;
+  margin-bottom:1rem;
+  text-shadow:0 10px 30px rgba(0,0,0,0.5);
 }
 
-.feature-cards {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
+.hero p{
+  font-size:1.3rem;
+  margin-bottom:2rem;
+  opacity:0.9;
 }
 
-.card {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 12px;
-  width: 280px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s ease;
+.hero-buttons{
+  display:flex;
+  justify-content:center;
+  gap:1rem;
+  flex-wrap:wrap;
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  border: 2px solid #2563eb;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+.hero-buttons button{
+  padding:1rem 2.5rem;
+  border:none;
+  border-radius:999px;
+  font-weight:600;
+  cursor:pointer;
+  background:white;
+  color:#1e40af;
+  transition:all 0.3s ease;
 }
 
-.footer {
-  background-color: #0f172a;
-  color: #cbd5e1;
-  text-align: center;
-  padding: 2rem;
+.hero-buttons button:hover{
+  background:#0f172a;
+  color:white;
+  transform:scale(1.05);
+}
+
+.features{
+  padding:6rem 2rem;
+  text-align:center;
+  background:linear-gradient(180deg,#f8fafc,#eef2f7);
+}
+
+.features h2{
+  font-size:2.5rem;
+  margin-bottom:3rem;
+  color:#0f172a;
+}
+
+.feature-cards{
+  display:flex;
+  justify-content:center;
+  gap:2rem;
+  flex-wrap:wrap;
+}
+
+.card{
+  background:white;
+  padding:2rem;
+  border-radius:18px;
+  width:280px;
+  box-shadow:0 15px 40px rgba(0,0,0,0.1);
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-10px);
+  box-shadow:0 20px 50px rgba(0,0,0,0.2);
+}
+
+.card h3{
+  margin-bottom:10px;
+}
+
+.stats-section{
+  padding:6rem 2rem;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:2rem;
+  background:linear-gradient(135deg,#1e40af,#0ea5e9);
+}
+
+.stat{
+  text-align:center;
+  padding:2rem;
+  border-radius:20px;
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(10px);
+  color:white;
+}
+
+.stat h3{
+  font-size:2.5rem;
+}
+
+.cta-section{
+  padding:6rem 2rem;
+  text-align:center;
+  background:#0f172a;
+  color:white;
+}
+
+.cta-buttons button{
+  padding:1rem 2.5rem;
+  border-radius:999px;
+  border:none;
+  background:white;
+  color:#1e40af;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.cta-buttons button:hover{
+  background:#1e40af;
+  color:white;
+}
+
+@keyframes fadeUp{
+  from{
+    opacity:0;
+    transform:translateY(30px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }

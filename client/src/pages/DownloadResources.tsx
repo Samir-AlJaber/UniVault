@@ -1,22 +1,23 @@
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import "../styles/download.css";
-import "../styles/overlay.css";
 
 export default function DownloadResources() {
-
   const [semesters, setSemesters] = useState<string[]>([]);
   const [courses, setCourses] = useState<string[]>([]);
   const [resources, setResources] = useState<any[]>([]);
 
   const [semester, setSemester] = useState("");
   const [course, setCourse] = useState("");
+  const [search, setSearch] = useState("");
+  const [sortType, setSortType] = useState("");
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const [overlayOpen, setOverlayOpen] = useState(false);
-  const [overlayTitle, setOverlayTitle] = useState("");
   const [overlayMessage, setOverlayMessage] = useState("");
+  const [ratingInput, setRatingInput] = useState("");
+  const [selectedResource, setSelectedResource] = useState<any>(null);
 
   useEffect(() => {
     fetchSemesters();
@@ -32,6 +33,7 @@ export default function DownloadResources() {
     setSemester(selectedSemester);
     setCourse("");
     setResources([]);
+    setSearch("");
 
     const res = await fetch(`http://127.0.0.1:8000/api/courses/${selectedSemester}`);
     const data = await res.json();
@@ -46,80 +48,192 @@ export default function DownloadResources() {
     if (data.success) setResources(data.resources);
   }
 
-  function handleDownload(filePath: string) {
+  function handleDownload(id: number) {
     if (!user || !user.id) {
-      setOverlayTitle("Access Restricted");
-      setOverlayMessage("You must register or login to download resources");
+      setOverlayMessage("You must log in to download");
+      setSelectedResource(null);
       setOverlayOpen(true);
       return;
     }
 
-    window.open(`http://127.0.0.1:8000/storage/${filePath}`, "_blank");
+    const link = document.createElement("a");
+    link.href = `http://127.0.0.1:8000/api/download/${id}`;
+    link.setAttribute("download", "");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  let filteredResources = resources.filter((res) =>
+    res.title.toLowerCase().includes(search.toLowerCase())
+  );
+
+  if (sortType === "rating") {
+    filteredResources = [...filteredResources].sort(
+      (a, b) => (b.avg_rating || 0) - (a.avg_rating || 0)
+    );
+  }
+
+  if (sortType === "newest") {
+    filteredResources = [...filteredResources].sort(
+      (a, b) => b.id - a.id
+    );
+  }
+
+  if (sortType === "oldest") {
+    filteredResources = [...filteredResources].sort(
+      (a, b) => a.id - b.id
+    );
+  }
+
+  async function submitRating() {
+    if (!ratingInput || !selectedResource) return;
+
+    await fetch(`http://127.0.0.1:8000/api/rate/${selectedResource.id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        rating: Number(ratingInput),
+        user_id: user.id
+      })
+    });
+
+    setOverlayOpen(false);
+    setRatingInput("");
+    setSelectedResource(null);
+    fetchResources(course);
   }
 
   return (
     <div>
-
       <Navbar />
 
-      <div className="download-container">
-
+      <div className="products-container">
         <h2>Download Resources</h2>
 
-        <div className="form-group">
-          <label>Semester</label>
-          <select value={semester} onChange={(e) => fetchCourses(e.target.value)}>
-            <option value="">Select Semester</option>
-            {semesters.map((sem) => <option key={sem}>{sem}</option>)}
-          </select>
+        <div className="controls-wrapper">
+          <div className="search-section">
+            <input
+              type="text"
+              placeholder="Search resource..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          <div className="filter-section">
+            <h3>Select</h3>
+
+            <div className="filter-grid">
+              <select value={semester} onChange={(e) => fetchCourses(e.target.value)}>
+                <option value="">Semester</option>
+                {semesters.map((s) => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+
+              <select value={course} onChange={(e) => fetchResources(e.target.value)}>
+                <option value="">Course</option>
+                {courses.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+
+              <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
+                <option value="">Sort</option>
+                <option value="rating">By Rating</option>
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
+          </div>
         </div>
 
-        {courses.length > 0 && (
-          <div className="form-group">
-            <label>Course</label>
-            <select value={course} onChange={(e) => fetchResources(e.target.value)}>
-              <option value="">Select Course</option>
-              {courses.map((c) => <option key={c}>{c}</option>)}
-            </select>
-          </div>
-        )}
+        {filteredResources.length > 0 ? (
+          <div className="products-grid">
+            {filteredResources.map((res) => (
+              <div key={res.id} className="product-card">
+                <h3>{res.title}</h3>
 
-        {resources.length > 0 && (
-          <div className="resources-list">
+                <p><strong>Course:</strong> {res.course}</p>
+                <p><strong>Semester:</strong> {res.semester}</p>
 
-            {resources.map((res) => (
-
-              <div key={res.id} className="resource-item">
-
-                <span>{res.title}</span>
-
-                <div>
-
-                  <button onClick={() => handleDownload(res.file_path)}>
+                <div className="card-actions">
+                  <button className="buy-btn" onClick={() => handleDownload(res.id)}>
                     Download
                   </button>
 
+                  <button className="stock-btn">
+                    {res.avg_rating ? `${res.avg_rating}/10` : "New"}
+                  </button>
+
+                  <button
+                    className="delete-btn"
+                    onClick={() => {
+
+                      if (!user || !user.id) {
+                        setOverlayMessage("You must log in to rate");
+                        setSelectedResource(null);
+                        setOverlayOpen(true);
+                        return;
+                      }
+
+                      if (res.user_id === user.id) {
+                        setOverlayMessage("You cannot rate your own resource");
+                        setSelectedResource(null);
+                        setOverlayOpen(true);
+                        return;
+                      }
+
+                      setOverlayMessage("Rate out of 10:");
+                      setSelectedResource(res);
+                      setOverlayOpen(true);
+                    }}
+                  >
+                    Rate
+                  </button>
                 </div>
-
               </div>
-
             ))}
-
           </div>
+        ) : (
+          <div className="no-products">No resources found</div>
         )}
-
       </div>
 
       {overlayOpen && (
         <div className="overlay-backdrop">
           <div className="overlay-box">
-            <h3>{overlayTitle}</h3>
-            <p>{overlayMessage}</p>
-            <button onClick={() => setOverlayOpen(false)}>OK</button>
+            <h2 className="overlay-title">
+              {selectedResource ? "Rate" : "Notice"}
+            </h2>
+
+            <p className="overlay-text">{overlayMessage}</p>
+
+            {selectedResource && (
+              <>
+                <input
+                  className="overlay-input"
+                  type="number"
+                  min="1"
+                  max="10"
+                  value={ratingInput}
+                  onChange={(e) => setRatingInput(e.target.value)}
+                />
+                <button className="overlay-btn" onClick={submitRating}>
+                  Submit
+                </button>
+              </>
+            )}
+
+            {!selectedResource && (
+              <button className="overlay-btn" onClick={() => setOverlayOpen(false)}>
+                OK
+              </button>
+            )}
           </div>
         </div>
       )}
-
     </div>
   );
 }
