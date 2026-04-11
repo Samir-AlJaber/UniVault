@@ -11,20 +11,20 @@ export default function Resources() {
 
       <Navbar />
 
-      <div className="category-container">
+      <div className="resource-container">
 
         <h2>Resources</h2>
 
-        <div className="category-list">
+        <div className="resource-list">
 
-          <div className="category-item">
+          <div className="resource-item">
             <span>Upload Resources</span>
             <button onClick={() => navigate("/upload")}>
               Go
             </button>
           </div>
 
-          <div className="category-item">
+          <div className="resource-item">
             <span>Download Resources</span>
             <button onClick={() => navigate("/download")}>
               Go

@@ -37,6 +37,7 @@ export default function Navbar() {
         <div className="nav-links">
           <Link to="/">Home</Link>
           <Link to="/resources">Resources</Link>
+          <Link to="/upload">Upload</Link>
           <Link to="/download">Download</Link>
           {isLoggedIn ? (
             <>

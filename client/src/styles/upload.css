@@ -1,4 +1,4 @@
-.products-container {
+.upload-container {
   min-height: 100vh;
   padding: 4rem 1rem;
   display: flex;
@@ -16,7 +16,7 @@
   animation: gradientShift 8s ease infinite;
 }
 
-.products-container::before {
+.upload-container::before {
   content: "";
   position: absolute;
   width: 420px;
@@ -29,7 +29,7 @@
   animation: floatBlob 12s ease-in-out infinite;
 }
 
-.products-container::after {
+.upload-container::after {
   content: "";
   position: absolute;
   width: 420px;
@@ -42,7 +42,7 @@
   animation: floatBlob 16s ease-in-out infinite;
 }
 
-.products-container h2 {
+.upload-container h2 {
   color: white;
   margin-bottom: 2rem;
   font-size: 2.4rem;

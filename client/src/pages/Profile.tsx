@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import MessageOverlay from "../components/MessageOverlay";
 import "../styles/profile.css";
+import "../styles/overlay.css";
 
 export default function Profile() {
 
@@ -8,6 +10,8 @@ export default function Profile() {
 
   const [resources, setResources] = useState<any[]>([]);
   const [message, setMessage] = useState("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [resourceToDelete, setResourceToDelete] = useState<number | null>(null);
 
   useEffect(() => {
     fetchUserResources();
@@ -46,7 +50,7 @@ export default function Profile() {
 
       <Navbar />
 
-      <div className="category-container">
+      <div className="profile-container">
 
         <h2>User Profile</h2>
 
@@ -61,19 +65,19 @@ export default function Profile() {
           </div>
         )}
 
-        <div className="category-list">
+        <div className="profile-list">
 
           {resources.length === 0 ? (
-            <div className="category-item">
+            <div className="profile-item">
               <span>No resources uploaded yet</span>
             </div>
           ) : (
             resources.map((res) => (
-              <div key={res.id} className="category-item">
+              <div key={res.id} className="profile-item">
 
                 <span>{res.title}</span>
 
-                <button onClick={() => deleteResource(res.id)}>
+                <button onClick={() => { setResourceToDelete(res.id); setShowDeleteConfirm(true); }}>
                   Delete
                 </button>
 
@@ -84,6 +88,25 @@ export default function Profile() {
         </div>
 
       </div>
+
+      <MessageOverlay
+        isOpen={showDeleteConfirm}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this resource?"
+        buttonText="Delete"
+        cancelText="Cancel"
+        onClose={() => {
+          if (resourceToDelete) {
+            deleteResource(resourceToDelete);
+          }
+          setShowDeleteConfirm(false);
+          setResourceToDelete(null);
+        }}
+        onCancel={() => {
+          setShowDeleteConfirm(false);
+          setResourceToDelete(null);
+        }}
+      />
 
     </div>
   );

@@ -116,7 +116,7 @@ export default function UploadResources() {
 
       <Navbar />
 
-      <div className="products-container">
+      <div className="upload-container">
 
         <h2>Upload Resource</h2>
 

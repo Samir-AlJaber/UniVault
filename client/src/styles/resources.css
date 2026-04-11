@@ -1,4 +1,4 @@
-.category-container {
+.resource-container {
   min-height: 100vh;
   padding: 4rem 1rem;
   display: flex;
@@ -9,12 +9,12 @@
   z-index: 1;
 }
 
-.category-container > * {
+.resource-container > * {
   position: relative;
   z-index: 2;
 }
 
-.category-container::before {
+.resource-container::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -29,7 +29,7 @@
   animation: bgPulse 5s ease-in-out infinite;
 }
 
-.category-container::after {
+.resource-container::after {
   content: "";
   position: absolute;
   width: 400px;
@@ -42,7 +42,7 @@
   animation: float2 5s ease-in-out infinite;
 }
 
-.category-container h2 {
+.resource-container h2 {
   color: white;
   font-size: 2.4rem;
   font-weight: 800;
@@ -51,7 +51,7 @@
   animation: fadeUp .6s ease;
 }
 
-.category-list {
+.resource-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 2rem;
@@ -59,7 +59,7 @@
   max-width: 700px;
 }
 
-.category-item {
+.resource-item {
   background: rgba(255,255,255,0.92);
   border-radius: 16px;
   padding: 1.8rem;
@@ -72,18 +72,18 @@
   animation: fadeUp .5s ease;
 }
 
-.category-item:hover {
+.resource-item:hover {
   transform: translateY(-8px) scale(1.03);
   box-shadow: 0 30px 60px rgba(0,0,0,0.25);
 }
 
-.category-item span {
+.resource-item span {
   font-weight: 700;
   color: #1e293b;
   flex: 1;
 }
 
-.category-item button {
+.resource-item button {
   padding: 8px 16px;
   border: none;
   border-radius: 10px;
@@ -95,7 +95,7 @@
   transition: .25s;
 }
 
-.category-item button:hover {
+.resource-item button:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(99,102,241,0.45);
   animation: buttonFlow 2s linear infinite;
