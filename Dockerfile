@@ -49,7 +49,7 @@ WORKDIR /var/www/html
 RUN composer install
 
 # Set environment variables for server
-COPY .env.example .env
+COPY server/.env.example .env
 
 # Set permissions for Laravel storage and cache
 RUN chown -R www-data:www-data /var/www/html && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
